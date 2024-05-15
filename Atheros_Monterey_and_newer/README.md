@@ -23,8 +23,8 @@ Download the following:
 ### 2. Modify Kexts
 1. Delete all three kexts inside the Plugins folder of `IO80211ElCap.kext`.
 2. Add Chunnann's version of `AirportAtheros40` inside the `IO80211ElCap.kext`'s Plugins folder.
-3. Delete __CodeSignature_ and _Version.plist_ inside AirportAtheros40.
-4. Open Info.plist under AirportAtheros40, find `com.apple.iokit.IO80211Family`, and replace it with `com.apple.iokit.IO80211ElCap`.
+3. Delete __CodeSignature_ and _Version.plist_ inside `AirportAtheros40`.
+4. Open _Info.plist_ under AirportAtheros40, find `com.apple.iokit.IO80211Family`, and replace it with `com.apple.iokit.IO80211ElCap`.
 
 ### 3. Update config.plist
 
