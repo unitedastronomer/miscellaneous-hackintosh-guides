@@ -25,7 +25,8 @@ Download the following:
 3. Delete __CodeSignature_ and _Version.plist_ inside `AirportAtheros40`.
 4. Open _Info.plist_ under AirportAtheros40, find `com.apple.iokit.IO80211Family`, and replace it with `com.apple.iokit.IO80211ElCap`.
 
-You could try to use the AirportAtheros40 that came with the ElCapIO80211, I have not personally tested this.
+* You could try to use the `AirportAtheros40.kext` that came with the `IO80211ElCap.kext` instead of Chunnan's, I have not personally tested this. 
+   * If yours was not included in Chunnan's list, try the one that came with `IO80211ElCap.kext`.
 
 ### 3. Update config.plist
 
@@ -34,7 +35,6 @@ You could try to use the AirportAtheros40 that came with the ElCapIO80211, I hav
 * Add the kexts and adjust their `MinKernel` accordingly.
 ![image](https://github.com/unitedastronomer/miscellaneous-hackintosh-guides/assets/155970773/ee650a22-ada6-486d-800d-4b56bd689479)
 * Remove any previously added kexts such as `HS80211Family`, along with its matching `AirportAtheros40`; the kexts we just added will work for earlier macOS versions too.
-* If yours was not included in chunnan's list, try the one that came with `ElCap80211`.
 
 
 #### Device Properties Section
@@ -43,28 +43,39 @@ Add these in device properties of your WiFi's device path AS IS:
 | Key*   | Value      |   Type |
 |--------|------------|--------|
 | IOName | pci168c,2a | String |
-| compatible| pci168c,2a | String |
-| device-id | 2A000000 | Data |
 
-* **Do not change this value**; we spoof the IOName to an Atheros found on iMac11,x which OCLP supports.
+* **Do not change this value**; we spoof the `IOName` to an Atheros found on iMac11,x which OCLP supports.
 * You can identify where your WiFi card's path via Hackintool.
 ![](screenshots/hackintool_devicepath.png)
 * This will allow OCLP to automatically detect **"Legacy Wireless"**, eliminating the need to [force-enable Wi-Fi Patching in OCLP](https://github.com/5T33Z0/OC-Little-Translated/blob/main/14_OCLP_Wintel/Enable_Features/WiFi_Sonoma.md#troubleshooting-force-enable-wi-fi-patching-in-oclp).
-* `compatible` and `device-id` was optional in my case as I use the one from Chunnan, however you may need it if you use the `AirportAtheros40` that came one from `ElCap`.
+
+If your device was not included in Chunnan's list, and use OCLP's `AirportAtheros40` instead: 
+* For certain AR9285/7 and AR9280 chipsets, you will need to apply a fake Device ID to your wireless card. This is due to `AirPortAtheros40` having internal PCI ID checks meaning simply expanding the device-id list won't work. - [Khronokernel](https://github.com/khronokernel/IO80211-Patches/blob/main/README.md)
+
+| Key*   | Value      |   Type |
+|--------|------------|--------|
+| compatible| pci168c,2a | String |
+| device-id | 2A000000 | Data |
+
+> This is yet to be updated.
 
 ### Misc/Security Section
 * Change `SecureBootModel` to `Disabled`.
    * Note: Do an NVRAM reset at least once everytime you change this value.
+> Changing the secure boot status **requires** an NVRAM reset, if not some variables are retained which can cause issue with IMG4 verification in macOS. - [Khronokernel](https://github.com/mrlimerunner/sonoma-wifi-hacks?tab=readme-ov-file#pre-root-patching)
+<br>
+
+> [ApECID](https://dortania.github.io/OpenCore-Post-Install/universal/security/applesecureboot.html#apecid) *cannot* be used with root patches, it needs to be disabled and remain disabled.
 
 ### NVRAM Section
 * Change `csr-active-config` to `03080000`.
 * Add `amfi=0x80` to boot-args.
+  
+Restart and open the OCLP app, then apply root patches.
 
 #### For AR9565 users, if the above didn't work, import the set of patches `ar9565.plist` from this repo under `Kernel -> Patches` of your config.plist:
 * Patches are based on ATH9Fixup source code.
 ![](https://github.com/unitedastronomer/miscellaneous-hackintosh-guides/blob/fc929cac5a61b103ff4d5c574efa05c0d4a4ac67/Atheros_Wifi_Monterey_and_newer/screenshots/import-ocat.gif)
-Restart and open the OCLP app, then apply root patches.
-
 
 # Supplemental Guide: Assigning an ACPI Name
 
@@ -122,7 +133,7 @@ After:
 ![](screenshots/hackintool_pci1683,36_to_ARPT.png)
 
 
-You can now see the `IOName` is properly injected/spoofed. Force injecting would not be necessary anymore as OCLP will now recognize the spoofed `IOName` (of an iMac11,x Atheros card - of which OCLP supports).
+You can now see the `IOName` is properly injected/spoofed. Force root patching would not be necessary anymore as OCLP will now recognize the spoofed `IOName` (of an iMac11,x Atheros card - of which OCLP supports).
 
 |Before|After|
 |-|-|
@@ -144,3 +155,4 @@ Credits:
 * [PG7](https://www.insanelymac.com/forum/topic/359007-wifi-atheros-monterey-ventura-sonoma-work/) for the tutorial
 * [Chunnan](https://www.insanelymac.com/forum/topic/312045-atheros-wireless-driver-os-x-101112-for-unsupported-cards/?do=findComment&comment=2509900) for patched ElCap AirPortAtheros40.kext, and patches from ATH9Fixup
 * [Dortania](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi) for IO80211ElCap.kext
+* [Alejandro](https://www.facebook.com/share/p/bZgW6z33Eonsn3Cs/?mibextid=oFDknk) for giving a heads up, and informing of what Atheros Wireless Card requires `device-id`
