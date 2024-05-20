@@ -8,7 +8,7 @@ DefinitionBlock ("", "SSDT", 2, "ARPT", "WIFIPCI", 0x00001000)
         {
             Device (ARPT)
             {
-                Name (_ADR, 0x02000000)  // _ADR: Address
+                Name (_ADR, 0)  // _ADR: Address
             }
         }
         Else

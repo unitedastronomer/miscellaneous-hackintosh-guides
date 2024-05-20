@@ -77,8 +77,8 @@ This will allow OCLP to automatically detect **"Legacy Wireless"**, eliminating 
   
 Restart and open the OCLP app, then apply root patches.
 
-#### For AR9565 users, if the above didn't work, import the set of patches `ar9565.plist` from this repo under `Kernel -> Patches` of your config.plist:
-* Patches are based on ATH9Fixup source code.
+#### For AR9565 users (like me), if the above didn't work, import the set of patches `ar9565.plist` from this repo under `Kernel -> Patches` of your config.plist:
+* Patches are based on ATH9Fixup source code. Even `Kernel` -> `Patch` is meant to be used for kexts that resides in S/L/E, these set of patches will just works with the injected `AirportAtheros40` kext. `MinKernel` was set to `22.0.0` (Monterey) so it won't apply to `AirportAtheros40` that lives in S/L/E around High Sierra and earlier.
 ![](https://github.com/unitedastronomer/miscellaneous-hackintosh-guides/blob/fc929cac5a61b103ff4d5c574efa05c0d4a4ac67/Atheros_Wifi_Monterey_and_newer/screenshots/import-ocat.gif)
 
 # Supplemental Guide: Assigning an ACPI Name
@@ -108,12 +108,11 @@ If it has a name, such as `ARPT`. In this case, the `IOName` we try to inject is
 
 **`PCI0`**<sup> @0 /</sup> **`RP04`**<sup> @1C,3 /</sup> pci168c,36<sup> @0</sup>
 * Path: PCI0.RP04 (actually the ACPI path for it's parent/PCI Bridge)
-* Debug: 02 00 0
 
 Download the sample SSDT, and edit it according to your values:
 
 ```asl
-DefinitionBlock ("", "SSDT", 2, "WIFI", "WIFIPCI", 0x00001000)
+DefinitionBlock ("", "SSDT", 2, "ARPT", "WIFIPCI", 0x00001000)
 {
     External (_SB_.PCI0.RP04, DeviceObj)  // Replace "PCI0.RP04" with your WiFi's parent/PCI Bridge ACPI path
 
@@ -121,7 +120,7 @@ DefinitionBlock ("", "SSDT", 2, "WIFI", "WIFIPCI", 0x00001000)
     {
         Device (ARPT) // We assign a name for "pci168c,36" as "ARPT", "ARPT" is the ACPI name of WiFi card in Macs.
         {
-            Name (_ADR, 0x02000000)  // Add your debug value here, e.g., "02 00 0" becomes 0x02000000, `00 1C 4` becomes 0x001C40000
+            Name (_ADR, 0) 
         }
     }
 }
@@ -149,4 +148,4 @@ Credits:
 * [PG7](https://www.insanelymac.com/forum/topic/359007-wifi-atheros-monterey-ventura-sonoma-work/) for the tutorial
 * [Chunnan](https://www.insanelymac.com/forum/topic/312045-atheros-wireless-driver-os-x-101112-for-unsupported-cards/?do=findComment&comment=2509900) for patched ElCap AirPortAtheros40.kext, and patches from ATH9Fixup
 * [Dortania](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi) for IO80211ElCap.kext
-* [Alejandro](https://github.com/aleelmaitro/Hackintosh-Atheros-Wi-Fi-Legacy-Cards) information in regards of which `device-id` is appropriate for specific Atheros Wireless Card
+* [Alejandro](https://github.com/aleelmaitro/Hackintosh-Atheros-Wi-Fi-Legacy-Cards) information in regards of which `device-id` is appropriate for specific Atheros Wireless Card, and MAJOR corrections.
