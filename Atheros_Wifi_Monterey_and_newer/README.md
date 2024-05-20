@@ -1,12 +1,15 @@
 # Guide to Restoring Atheros WiFi Functionality on macOS Monterey+
 
-This guide is an extension of [5T33Z0](https://github.com/5T33Z0/OC-Little-Translated/blob/main/14_OCLP_Wintel/Enable_Features/WiFi_Sonoma.md)'s guide, and based on [PG7](https://www.insanelymac.com/forum/topic/359007-wifi-atheros-monterey-ventura-sonoma-work/)'s tutorial on InsanelyMac.
+This guide is an extension of [5T33Z0](https://github.com/5T33Z0/OC-Little-Translated/blob/main/14_OCLP_Wintel/Enable_Features/WiFi_Sonoma.md)'s guide, and based on [PG7](https://www.insanelymac.com/forum/topic/359007-wifi-atheros-monterey-ventura-sonoma-work/)'s tutorial on InsanelyMac. 
 
 ## Purpose of This Guide
 
 #### Some steps can be simplified.
 * Instead of forcing OCLP to root patch, you can just tweak your config so OCLP will automatically detect **"Legacy Wireless"** _out of the box_.
  
+Actually, someone had made a more simplified [guide](https://github.com/aleelmaitro/Hackintosh-Atheros-Wi-Fi-Legacy-Cards), consider the following below as supplemental.
+
+
 ## Steps
 
 ### 1. Download Required Files
