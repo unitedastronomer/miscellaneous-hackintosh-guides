@@ -4,15 +4,9 @@ DefinitionBlock ("", "SSDT", 2, "ARPT", "WIFIPCI", 0x00001000)
 
     Scope (_SB.PCI0.RP04)
     {
-        If (_OSI ("Darwin"))
+        Device (ARPT)
         {
-            Device (ARPT)
-            {
-                Name (_ADR, 0)  // _ADR: Address
-            }
-        }
-        Else
-        {
+             Name (_ADR, Zero)  // _ADR: Address
         }
     }
 }
