@@ -6,16 +6,16 @@ You could use the [**CatalinaBCM5701Ethernet.kext**](https://github.com/dortania
 2. Set MinKernel to **20.0.0**. <br>
 
 Add these to **Kernel -> Patch** AS IT IS:
-|Identifier*|Find|Replace|minKernel| Comment |
-|-|-|-|-|-|
-|com.apple.iokit.CatalinaBCM5701Ethernet | E8CA9EFF FF668983 00050000 | B8B41600 00668983 00050000 | 20.0.0 | Broadcom BCM577XX Patch |
+|Identifier*|Find|Replace|minKernel|Count| Comment |
+|-|-|-|-|-|-|
+|com.apple.iokit.CatalinaBCM5701Ethernet | E8CA9EFF FF668983 00050000 | B8B41600 00668983 00050000 | 20.0.0 | 1 | Broadcom BCM577XX Patch |
 
 
 #### Cosmetic
 This is optional. You could also apply a **Kernel -> Patch** to show the correct model in System Report, edit accordingly to match your model.
-|Identifier*|Find|Replace|minKernel| Comment |
-|-|-|-|-|-|
-|com.apple.iokit.CatalinaBCM5701Ethernet | 35373736 35 | 35373738 35 | 20.0.0 | SysReport 57765 -> 57785 (Cosmetic) |
+|Identifier*|Find|Replace|minKernel|Count| Comment |
+|-|-|-|-|-|-|
+|com.apple.iokit.CatalinaBCM5701Ethernet | 35373736 35 | 35373738 35 | 20.0.0 | 0 | SysReport 57765 -> 57785 (Cosmetic) |
 
 3 <kbd>5</kbd> 3 <kbd>7</kbd> 3 <kbd>7</kbd> 3 <kbd>**6**</kbd> 3 <kbd>**5**</kbd> -> 3 <kbd>5</kbd> 3 <kbd>7</kbd> 3 <kbd>7</kbd> 3 <kbd>**8**</kbd> 3 <kbd>**5**</kbd>
 
