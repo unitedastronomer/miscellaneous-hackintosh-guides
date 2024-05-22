@@ -6,9 +6,6 @@ This guide is an extension of [5T33Z0](https://github.com/5T33Z0/OC-Little-Trans
 
 #### Some steps can be simplified.
 * Instead of forcing OCLP to root patch, you can just tweak your config so OCLP will automatically detect **"Legacy Wireless"** _out of the box_.
- 
-Actually, someone had made a more simplified [guide](https://github.com/aleelmaitro/Hackintosh-Atheros-Wi-Fi-Legacy-Cards), consider the following below as supplemental.
-
 
 ## Steps
 
@@ -19,15 +16,10 @@ Download the following:
 * [`corecaptureElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
 * [`IO80211ElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
 * [`AMFIPass.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Acidanthera)
-* chunnann's [`AirPortAtheros40.kext`](https://www.insanelymac.com/forum/topic/312045-atheros-wireless-driver-os-x-101112-for-unsupported-cards/?do=findComment&comment=2509900) **10.11.x version** (el-capitan)
-
+  
 ### 2. Modify Kexts
-1. Delete all three kexts inside the Plugins folder of `IO80211ElCap.kext`.
-2. Add Chunnann's version of `AirportAtheros40` inside the `IO80211ElCap.kext`'s Plugins folder.
-   * You could keep and try the `AirportAtheros40.kext` that came with the `IO80211ElCap.kext` instead of Chunnan's, I have not personally tested this. 
-   * If your card was not included in Chunnan's list, try the one that came with `IO80211ElCap.kext`.
-4. If using Chunnan's, delete __CodeSignature_ and _Version.plist_ inside `AirportAtheros40`.
-5. If using Chunnan's, open _Info.plist_ under AirportAtheros40, find `com.apple.iokit.IO80211Family`, and replace it with `com.apple.iokit.IO80211ElCap`.
+
+Delete all the kexts excpet `AirportAtheros40` inside the Plugins folder of `IO80211ElCap.kext`.
 
 ### 3. Update config.plist
 
@@ -65,7 +57,6 @@ Example:
 
 This will allow OCLP to automatically detect **"Legacy Wireless"**, eliminating the need to [force-enable Wi-Fi Patching in OCLP](https://github.com/5T33Z0/OC-Little-Translated/blob/main/14_OCLP_Wintel/Enable_Features/WiFi_Sonoma.md#troubleshooting-force-enable-wi-fi-patching-in-oclp).
 
-
 ### Misc/Security Section
 * Change `SecureBootModel` to `Disabled`.
    * Note: Do an NVRAM reset at least once everytime you change this value.
@@ -83,6 +74,7 @@ Restart and open the OCLP app, then apply root patches.
 #### For AR9565 users (like me), if the above didn't work, import the set of patches `ar9565.plist` from this repo under `Kernel -> Patches` of your config.plist:
 * Patches are based on ATH9Fixup source code. Even `Kernel` -> `Patch` is meant to be used for kexts that resides in S/L/E, these set of patches will just works with the injected `AirportAtheros40` kext. `MinKernel` was set to `22.0.0` (Monterey) so it won't apply to `AirportAtheros40` that lives in S/L/E around High Sierra and earlier.
 ![](https://github.com/unitedastronomer/miscellaneous-hackintosh-guides/blob/fc929cac5a61b103ff4d5c574efa05c0d4a4ac67/Atheros_Wifi_Monterey_and_newer/screenshots/import-ocat.gif)
+
 
 # Supplemental Guide: Assigning an ACPI Name
 
@@ -149,6 +141,6 @@ Open the OCLP app, then apply root patches.
 
 Credits:
 * [PG7](https://www.insanelymac.com/forum/topic/359007-wifi-atheros-monterey-ventura-sonoma-work/) for the tutorial
-* [Chunnan](https://www.insanelymac.com/forum/topic/312045-atheros-wireless-driver-os-x-101112-for-unsupported-cards/?do=findComment&comment=2509900) for patched ElCap AirPortAtheros40.kext, and patches from ATH9Fixup
+* [Chunnan](https://www.insanelymac.com/forum/topic/312045-atheros-wireless-driver-os-x-101112-for-unsupported-cards/?do=findComment&comment=2509900) patches from ATH9Fixup
 * [Dortania](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi) for IO80211ElCap.kext
 * [Alejandro](https://github.com/aleelmaitro/Hackintosh-Atheros-Wi-Fi-Legacy-Cards) information in regards of which `device-id` is appropriate for specific Atheros Wireless Card, and MAJOR corrections.
