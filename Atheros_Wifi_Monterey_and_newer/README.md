@@ -71,10 +71,12 @@ This will allow OCLP to automatically detect **"Legacy Wireless"**, eliminating 
   
 Restart and open the OCLP app, then apply root patches.
 
-#### For AR9565 users (like me), if the above didn't work, import the set of patches `ar9565.plist` from this repo under `Kernel -> Patches` of your config.plist:
+#### For AR9565 users, import the set of patches `ar9565.plist` from this repo under `Kernel -> Patches` of your config.plist:
 * Patches are based on ATH9Fixup source code. Even `Kernel` -> `Patch` is meant to be used for kexts that resides in S/L/E, these set of patches will just works with the injected `AirportAtheros40` kext. `MinKernel` was set to `22.0.0` (Monterey) so it won't apply to `AirportAtheros40` that lives in S/L/E around High Sierra and earlier.
 ![](https://github.com/unitedastronomer/miscellaneous-hackintosh-guides/blob/fc929cac5a61b103ff4d5c574efa05c0d4a4ac67/Atheros_Wifi_Monterey_and_newer/screenshots/import-ocat.gif)
 
+* Unlike AR93xx, AR928x, AR24x AR54xx, that may work out of the box with just spoofing alone. AR946x, AR9485, and AR9565 might need some extra tweaking in able for them to work, however I only have AR9565 to test. Please make a new issue in issues tab if following this whole guide (even kext were loaded) but WiFi is still not working.
+  * I will be just be just copying the patches from ATH9Fixup into a .plist just like above, (AR946x, AR9485, and AR9565 only).
 
 # Supplemental Guide: Assigning an ACPI Name
 
