@@ -16,7 +16,7 @@ Download the following:
 * [`corecaptureElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
 * [`IO80211ElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
 * [`AMFIPass.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Acidanthera)
-* [`ATH9KFixup`](https://github.com/unitedastronomer/ATH9KFixup) only for AR9565 (or AR946x, AR9485 - untested)
+* [`ATH9KFixup`](https://github.com/unitedastronomer/ATH9KFixup) needed for AR9565 (or AR946x, AR9485 - not sure if needed for this two, but the kext support these cards.)
 ### 2. Modify Kexts
 
 Delete all the kexts excpet `AirportAtheros40` inside the Plugins folder of `IO80211ElCap.kext`.
@@ -72,8 +72,8 @@ This will allow OCLP to automatically detect **"Legacy Wireless"**, eliminating 
 If you use ATH9Fixup, you will also need to add this boot-arg:
 
 * AR946X: (Default)
-* AR9485: -ath9485
-* AR9565: -ath9565
+* AR9485: `-ath9485`
+* AR9565: `-ath9565`
 
 Restart and open the OCLP app, then apply root patches.
 
