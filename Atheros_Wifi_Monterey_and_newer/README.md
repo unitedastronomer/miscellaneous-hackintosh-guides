@@ -16,11 +16,15 @@ Download the following:
 * [`corecaptureElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
 * [`IO80211ElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
 * [`AMFIPass.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Acidanthera)
-  
+* chunnann's [`AirPortAtheros40.kext`](https://www.insanelymac.com/forum/topic/312045-atheros-wireless-driver-os-x-101112-for-unsupported-cards/?do=findComment&comment=2509900) **10.11.x version** (el-capitan)
+
 ### 2. Modify Kexts
-
-Delete all the kexts excpet `AirportAtheros40` inside the Plugins folder of `IO80211ElCap.kext`.
-
+1. Delete all three kexts inside the Plugins folder of `IO80211ElCap.kext`.
+2. Add Chunnann's version of `AirportAtheros40` inside the `IO80211ElCap.kext`'s Plugins folder.
+   * You could also keep and try the `AirportAtheros40.kext` that came with the `IO80211ElCap.kext` instead of Chunnan's.
+   * If your card was not included in Chunnan's list, try the one that came with `IO80211ElCap.kext`.
+4. If using Chunnan's, delete __CodeSignature_ and _Version.plist_ inside `AirportAtheros40`.
+5. If using Chunnan's, open _Info.plist_ under AirportAtheros40, find `com.apple.iokit.IO80211Family`, and replace it with `com.apple.iokit.IO80211ElCap`.
 ### 3. Update config.plist
 
 #### Kernel Section
