@@ -59,6 +59,8 @@ Example:
 * AR9287 with an IOName `pci168c,2e`, must set its `IOName` and `compatible` to `pci168c,2a`, and its `device-id` to `2A000000`.
 * AR9485 with an IOName `pci168c,32`, must set its `IOName` and `compatible` to `pci168c,30`, and its `device-id` to `30000000`.
 
+> If you use the chunnan version of AirportAtheros40, don't add the `device-id` and `compatible`.
+
 This will allow OCLP to automatically detect **"Legacy Wireless"**, eliminating the need to [force-enable Wi-Fi Patching in OCLP](https://github.com/5T33Z0/OC-Little-Translated/blob/main/14_OCLP_Wintel/Enable_Features/WiFi_Sonoma.md#troubleshooting-force-enable-wi-fi-patching-in-oclp).
 
 ### Misc/Security Section
