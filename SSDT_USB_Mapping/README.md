@@ -163,7 +163,7 @@ DefinitionBlock ("", "SSDT", 2, "CORP", "UsbReset", 0x00001000)
 }
 ```
 
-While the original EHC1 is disabled, and so it's child devices. So let's just add new ports to the EH01, while retaining the original `_ADR` of the ports from EHC1 to the new ports in EH01. EHC1 has a HUB device named `HUBN`, and the under this `HUBN`, there are the ports.
+While the original EHC1 is disabled, **and so it's child devices**. So let's just add new ports to the EH01, while retaining the original `_ADR` of the ports from EHC1 to the new ports in EH01. EHC1 has a HUB device named `HUBN`, and the under this `HUBN`, there are the ports.
 
 Under EH01, we will append these devices and their `_ADR`
 
@@ -261,8 +261,15 @@ DefinitionBlock ("", "SSDT", 2, "XXXXXXX", "XXXXXXX", 0x00001000)
                     Return (GUPC) 
                 }
             }
+            /*
+                Append if there are another port within HUBN
+            */
         }                    
     }  
 }
 ```
+
+Note:
+* For `_PLD`, I didn't have to add this, port works okay with or without this. I am not sure if this exist in real macs ACPI.
+* This could be so wrong, it just happens to work for me.
 
