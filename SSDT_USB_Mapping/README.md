@@ -18,7 +18,7 @@ Advantage of this approach:
 
 ## Background
 #### 1. The `_UPC` Method 
-Every port in DSDT (or SSDT) has a `_UPC` method. `_UPC` needs this `Package` of four data. This package to tells if port is active, and its type. In my case, the package is within `UPCP`. Yours might be named differently, but the structure may look like this. 
+Every port in DSDT (or SSDT) has a `_UPC` method. `_UPC` needs this `Package` of four data. This package tells if port is active, and its type. In my case, the package is within `UPCP`. Yours might be named differently, but the structure may look like this. 
 
 ```asl
 Device (HS01) // The USB Port
@@ -172,7 +172,7 @@ In the above:
 * EH01 is also being introduced with the `_ADR` of the of EHC1 taken from DSDT.
 
 
-### 3. XHC RHUB
+### 3. SSDT-RHUB
 For XHC, there is the SSDT-RHUB. Pasting just for reference.
 
 ```asl
@@ -225,7 +225,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
     External (_SB_.PCI0.XHC.RHUB, DeviceObj) // Full pathing to RHUB/HUBN, change to yours
 
 
-    Scope (_SB.PCI0.XHC.RHUB) // Full pathing to RHUB/HUBN, change to yours
+    Scope (_SB.PCI0.XHC.RHUB) // Full pathing to RHUB (for XHCx) / HUBN (for EHCx), change to yours
         {
             Method (_STA, 0, NotSerialized)
             {
@@ -283,10 +283,11 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
     }  
 }
 ```
-> This `.aml` is based on SSDT-RHUB, SSDT-USB-Reset, and the GUPC method. The whole idea of this guide is just disable the HUB under these USB controllers, and then introduce a new one with the `_ADR` of the original devices in DSDT/SSDT
+* This `.aml` is based on SSDT-RHUB, SSDT-USB-Reset, and the GUPC method.
+* The whole idea of this guide is just disable the HUB under these USB controllers, and then introduce a new one with the `_ADR` of the original devices in DSDT/SSDT
 
 ## Notes
 * `_PLD` methods exist under these ports in DSDT. I didn't have to add this, port works okay with or without this. I am not sure if it exists in real macs ACPI.
 * Why not follow what **SSDT-USB-Reset** does in renaming USB controllers instead of `ACPI` -> `Patch`? 
 	* For instance, if I disable XHCI and introduce SHCI (with `_ADR`  XHCI), this also disables other methods under XHCI. I feel like it's safer to disable the Hub instead of the XHCI, meaning renaming `XHCI` to `SHCI` remains these methods intact in the original DSDT/SSDT, and such [patch](https://dortania.github.io/OpenCore-Post-Install/usb/misc/shutdown.html) could still work correctly.
-* Some information are based on the [ACPI_Mapping_USB_Ports/GUPC_Method](https://github.com/5T33Z0/OC-Little-Translated/tree/main/03_USB_Fixes/ACPI_Mapping_USB_Ports/GUPC_Method) of 5T33Z0/OC-Little-Translated guide, and the Dortania install guide.
+* Some information are based on the [ACPI_Mapping_USB_Ports/GUPC_Method](https://github.com/5T33Z0/OC-Little-Translated/tree/main/03_USB_Fixes/ACPI_Mapping_USB_Ports/GUPC_Method) of 5T33Z0/OC-Little-Translated guide, and `ACPI` -> `Patch` rename [patches](https://dortania.github.io/OpenCore-Post-Install/usb/system-preparation.html#checking-what-renames-you-need) from the Dortania install guide.
