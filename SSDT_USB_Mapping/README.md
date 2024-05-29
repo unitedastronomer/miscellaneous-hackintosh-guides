@@ -42,7 +42,7 @@ Device (HS01) // The USB Port
     }
 }
 ```
-The following values for USB port types are possible:
+The following values for USB port types are possible: [(Source)](https://github.com/5T33Z0/OC-Little-Translated/tree/main/03_USB_Fixes/ACPI_Mapping_USB_Ports/GUPC_Method)
 
 | Value  | Port Type |       
 | :----: | ----------|
@@ -140,7 +140,7 @@ DefinitionBlock ("", "SSDT", 2, "CORP", "UsbReset", 0x00001000)
             }
             Else
             {
-                Return (0x0F) // Enble EHC1 if not macOS
+                Return (0x0F) // Enable EHC1 if not macOS
             }
         }
     }
@@ -222,20 +222,20 @@ This guide assumes you already know which parts are active, and their port type.
 ```asl
 DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
 {
-    External (_SB_.PCI0.XHC.RHUB, DeviceObj) // Full pathing to RHUB, change to yours
+    External (_SB_.PCI0.XHC.RHUB, DeviceObj) // Full pathing to RHUB/HUBN, change to yours
 
 
-    Scope (_SB.PCI0.XHC.RHUB) // Full pathing to RHUB, change to yours
+    Scope (_SB.PCI0.XHC.RHUB) // Full pathing to RHUB/HUBN, change to yours
         {
             Method (_STA, 0, NotSerialized)
             {
                If (_OSI ("Darwin"))
                      {
-                        Return (Zero) // This disables the device only in macOS
+                        Return (Zero) // This disables RHUB only in macOS
                      }
                      Else
                      {
-                        Return (0x0F) // Re-enables it for Windows
+                        Return (0x0F) // Re-enable it for other OS
                      }
             }                    
         }
@@ -271,6 +271,9 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
                     })
                     Return (GUPC) 
                 }
+		/*
+             	   Append if there are another port within HS01.
+           	 */
             }
             /*
                 Append if there are another port within RHUB.
@@ -285,20 +288,5 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
 ## Notes
 * `_PLD` methods exist under these ports in DSDT. I didn't have to add this, port works okay with or without this. I am not sure if it exists in real macs ACPI.
 * Why not follow what **SSDT-USB-Reset** does in renaming USB controllers instead of `ACPI` -> `Patch`? 
-	* For instance, if I disable XHCI and introduce SHCI (with `_ADR`  XHCI), this also disables other methods under XHCI. I feel like it's safer to disable the Hub instead of the device, meaning renaming `XHCI` to `SHCI` remains these methods intact in the original DSDT/SSDT, and such [patch](https://dortania.github.io/OpenCore-Post-Install/usb/misc/shutdown.html) could still work correctly.
-   
-* Aside from `_UPC`, if (maybe) the `_ADR` of each port is also borked in your ACPI. Just analyze their real address in IORegExplorer.
-	* The value (e.g. 0x14320000) is represented as follows: 0xAA**B**CDEFG [(Reference)](https://github.com/benbaker76/Hackintool/issues/39#issuecomment-581023453)
-		* AA - Ctrl number 8 bits (e.g. 0x14, aka XHCI)
-		* B - Port number 4 bits (e.g. 0x3, aka SS03)
-		* C ~ F - Bus number 4 bits (e.g. 0x2, aka IOUSBHostHIDDevice)
-		* C ~ F are filled as many times as many USB Hubs are there on the port.
-			* ie.
-				* XHCI - 0x14**x**xxxxx
-				* EHx1 - 0x1D**x**xxxxx
-				* EHx2 - 0x1A**x**xxxxx
-    	* For instance, HS05's Location ID is <code>0x14<b>5</b>00000</code>, the `5` is the `_ADR` of this port, meaning `Name (_ADR, 0x05)`.
-
-
-
+	* For instance, if I disable XHCI and introduce SHCI (with `_ADR`  XHCI), this also disables other methods under XHCI. I feel like it's safer to disable the Hub instead of the XHCI, meaning renaming `XHCI` to `SHCI` remains these methods intact in the original DSDT/SSDT, and such [patch](https://dortania.github.io/OpenCore-Post-Install/usb/misc/shutdown.html) could still work correctly.
 * Some information are based on the [ACPI_Mapping_USB_Ports/GUPC_Method](https://github.com/5T33Z0/OC-Little-Translated/tree/main/03_USB_Fixes/ACPI_Mapping_USB_Ports/GUPC_Method) of 5T33Z0/OC-Little-Translated guide, and the Dortania install guide.
