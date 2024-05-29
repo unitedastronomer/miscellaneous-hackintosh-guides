@@ -1,4 +1,4 @@
-# Miscellaneous guides for restoring support on long dropped hardwares in macOS
+# Miscellaneous Hackintosh Guides
 
 * [Broadcom Ethernet on Big Sur and newer](Broadcom_Ethernet_BigSur_and_newer)
 * [Atheros WiFi on Monterey and newer](Atheros_Wifi_Monterey_and_newer)
