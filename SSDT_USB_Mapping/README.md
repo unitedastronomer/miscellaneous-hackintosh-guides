@@ -280,9 +280,10 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
 ```
 > This `.aml` is based on SSDT-RHUB, SSDT-USB-Reset, and the GUPC method. The whole idea of this guide is just disable the HUB under these USB controllers, and then introduce a new one with the `_ADR` of the original devices in DSDT/SSDT
 
+## Notes
 * `_PLD` methods exist under these ports in DSDT. I didn't have to add this, port works okay with or without this. I am not sure if it exists in real macs ACPI.
-* Why not follow what **SSDT-USB-Reset** does in renaming USB controllers instead of ACPI -> Patch? 
-	* For instance, if I disable XHCI and introduce SHCI (with `_ADR`  XHCI), this also disables other methods under XHCI. I feel like it's safer to disable the Hub instead of the device, meaning renaming `XHCI` to `SHCI` remains these methods intact in the original DSDT/SSDT.
+* Why not follow what **SSDT-USB-Reset** does in renaming USB controllers instead of `ACPI` -> `Patch`? 
+	* For instance, if I disable XHCI and introduce SHCI (with `_ADR`  XHCI), this also disables other methods under XHCI. I feel like it's safer to disable the Hub instead of the device, meaning renaming `XHCI` to `SHCI` remains these methods intact in the original DSDT/SSDT, and such [patch](https://dortania.github.io/OpenCore-Post-Install/usb/misc/shutdown.html) could still work correctly.
    
 * Aside from `_UPC`, if (maybe) the `_ADR` of each port is also borked in your ACPI. Just analyze their real address in IORegExplorer.
 	* The value (e.g. 0x14320000) is represented as follows: 0xAA**B**CDEFG [(Reference)](https://github.com/benbaker76/Hackintool/issues/39#issuecomment-581023453)
