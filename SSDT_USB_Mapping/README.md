@@ -1,7 +1,7 @@
 
 # Mapping USB ports via ACPI without Replacement table
 > [!NOTE]  
->  Disclaimer: I am not a developer, and my knowledge of ACPI is limited. This might, or **MIGHT NOT** conform to ACPI specification.
+>  Disclaimer: I am not a developer, and my knowledge of ACPI is limited. This might, or **MIGHT NOT** conform to ACPI specification. This guide is still half baked.
 
 ### About
 * Majority of the ACPI USB mapping out there utilizes `_UPC` to `XUPC` renames that is quite confusing and hard to follow. 
