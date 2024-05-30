@@ -102,7 +102,7 @@ Add these patches under ACPI -> Patch of your config.plist.
 The idea is (if macOS):
 1. We disable the `RHUB` of XHC_ Controller, or the `HUBN` of EHC_ Controller. This effectively disables the `_UPC` methods under each ports of each hubs. 
 2. Introduce a new, differently named hubs such as `XHUB` for XHC_ or `HUBX` for EHC.
-3. Take the `ADR` of the XHC_/EHC, and then add them to these new hubs.
+3. Take the `ADR` of the XHC_/EHC hubs, and then add them to these new hubs.
 4. Add ports under these new hubs, take the `_ADR` of each ports from RHUB, and then adjust `_UPC` for each port.
 
 
