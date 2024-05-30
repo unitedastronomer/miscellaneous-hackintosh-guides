@@ -220,8 +220,8 @@ This guide assumes you already know which parts are active, and their port type.
 ```asl
 DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
 {
-    External (\_SB_.PCI0.XHC.RHUB, DeviceObj) // Full pathing to RHUB, change to yours
-    External (\_SB_.PCI0.EH01.HUBN, DeviceObj) // Full pathing to EH01, change to yours
+    External (\_SB_.PCI0.XHC.RHUB, DeviceObj) // Full pathing to XHC's RHUB, change to yours
+    External (\_SB_.PCI0.EH01.HUBN, DeviceObj) // Full pathing to EH01's HUBN, change to yours
 
 
     Scope (\_SB.PCI0.XHC.RHUB) // Full pathing to RHUB / HUBN, duplicate it you have both.
