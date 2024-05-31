@@ -10,7 +10,7 @@ Advantage of this method:
 ### Overview
 Each port in the DSDT for Broadwell, or in a SSDT for Skylake and newer, has a method called `_UPC`. This `_UPC` method requires a specific package consisting of four items. This package indicates whether the port is **active** and specifies its **type**. 
 
-In this instance, the package is contained within UPCP. While the naming may vary, the structure typically resembles this format.
+In this instance, the package is contained within `UPCP`. Your might be named differently, the structure typically resembles this format.
 
 
 ```asl
