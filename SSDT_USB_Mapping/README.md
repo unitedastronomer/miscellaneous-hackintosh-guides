@@ -1,7 +1,7 @@
 
 # Mapping USB ports via ACPI without Replacement table
 > [!NOTE]  
->  Disclaimer: I am not a developer, and my knowledge of ACPI is limited. This might, or **MIGHT NOT** conform to ACPI specification. I consider this guide half baked.
+>  Disclaimer: I am not a developer, and my knowledge of ACPI is limited. This might, or **MIGHT NOT** conform to ACPI specification. 
 
 Advantage of this method:
 * macOS independent!
