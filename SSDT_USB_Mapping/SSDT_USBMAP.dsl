@@ -1,23 +1,3 @@
-/*
- * Intel ACPI Component Architecture
- * AML/ASL+ Disassembler version 20200925 (64-bit version)
- * Copyright (c) 2000 - 2020 Intel Corporation
- * 
- * Disassembling to symbolic ASL+ operators
- *
- * Disassembly of iASL6YzrOg.aml, Sat Jun  1 03:38:28 2024
- *
- * Original Table Header:
- *     Signature        "SSDT"
- *     Length           0x00000165 (357)
- *     Revision         0x02
- *     Checksum         0x64
- *     OEM ID           "USBMAP"
- *     OEM Table ID     "USB_MAP"
- *     OEM Revision     0x00001000 (4096)
- *     Compiler ID      "INTL"
- *     Compiler Version 0x20200925 (538970405)
- */
 DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
 {
     External (_SB_.PCI0.EH01.HUBN, DeviceObj)
@@ -47,16 +27,16 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
     
     ^ Adjust and duplicate if you have both.
     
-        EH01:  Scope \_SB.PCI0.EH01.HUBN)
-        EH02:  Scope \_SB.PCI0.EH02.HUBN)
-        SHCI:  Scope \_SB.PCI0.SHCI.RHUB)
-        XHC:   Scope \_SB.PCI0.XHC_.RHUB)
+        EH01:  Scope (\_SB.PCI0.EH01.HUBN)
+        EH02:  Scope (\_SB.PCI0.EH02.HUBN)
+        SHCI:  Scope (\_SB.PCI0.SHCI.RHUB)
+        XHC:   Scope (\_SB.PCI0.XHC_.RHUB)
     
     */ 
     
     
 
-    Device (\_SB.PCI0.EH01.HUBX) // We add a new Hub `Device`, since RHUB or HUBN is disabled.
+    Device (\_SB.PCI0.EH01.HUBX) // We add a new Hub `Device`, since RHUB or HUBN is status is disabled.
     {
         Name (_ADR, Zero)  // Re-adding the _ADR (Address) of the RHUB/HUBN under the XHC/EHC USB Controller. RHUB or HUBN always have it `Zero`.
         Method (_STA, 0, NotSerialized)  
@@ -71,6 +51,17 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
             }
         }
     }
+
+    /*
+    
+    ^ Adjust and duplicate if you have both.
+    
+        EH01:  Device (\_SB.PCI0.EH01.HUBX)
+        EH02:  Device (\_SB.PCI0.EH02.HUBX)
+        SHCI:  Device (\_SB.PCI0.SHCI.XHUB)
+        XHC:   Device (\_SB.PCI0.XHC_.XHUB)
+    
+    */ 
 
     Device (\_SB.PCI0.EH01.HUBX.PR01) // Under HUBX, we add the Port such as PR01
     {
@@ -89,8 +80,13 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
     
     /*
     
-    Append if there are another port
-    
+    Append if there are another port:
+    Such as:
+		Device (\_SB.PCI0.EH01.HUBX.PR02) // for PR02
+    		{
+		Name (_ADR, 0x02) // _ADR of PR02
+		...
+		}
     */
     
 
@@ -114,4 +110,3 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
         */
     }
 }
-
