@@ -36,7 +36,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
     
     
 
-    Device (\_SB.PCI0.EH01.HUBX) // We add a new Hub `Device`, since RHUB or HUBN is status is disabled.
+    Device (\_SB.PCI0.EH01.HUBX) // We add a new Hub `Device`, since RHUB or HUBN status is disabled.
     {
         Name (_ADR, Zero)  // Re-adding the _ADR (Address) of the RHUB/HUBN under the XHC/EHC USB Controller. RHUB or HUBN always have it `Zero`.
         Method (_STA, 0, NotSerialized)  
