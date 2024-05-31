@@ -60,7 +60,7 @@ The following values for USB port types are possible:
 	* Refer to the table below
 2. Identify HUB device path in ACPI.
 	* RHUB for XHC/SHCI
-		* Such as `\_SB.PCI0.EH01.HUBN`
+		* Such as `\_SB.PCI0.XHC.RHUB`
 	* HUBN for EHC/EH01/EH02
 		* Such as `\_SB.PCI0.XHC.RHUB`
 2. Must already have identified which ports are active, and their type.
