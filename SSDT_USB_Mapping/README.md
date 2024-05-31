@@ -8,7 +8,10 @@ Advantage of this method:
 * No _UPC to XUPC rename! 🎉
 
 ### Overview
-Every port in DSDT (or SSDT) has a `_UPC` method. `_UPC` needs this `Package` of four items. This package tells if port is **active**, and its **type**. In this case, the package is within `UPCP`. Yours might be named differently, but the structure may look like this. 
+Each port in the DSDT for Broadwell, or in a SSDT for Skylake and newer, has a method called `_UPC`. This `_UPC` method requires a specific package consisting of four items. This package indicates whether the port is **active** and specifies its **type**. 
+
+In this instance, the package is contained within UPCP. While the naming convention may vary, the structure typically resembles this format.
+
 
 ```asl
 Device (HS01) // The USB Port
@@ -32,6 +35,8 @@ Device (HS01) // The USB Port
     }
 }
 ```
+
+
 The following values for USB port types are possible:
 
 | Value  | Port Type |       
@@ -47,15 +52,24 @@ The following values for USB port types are possible:
 |**`0x08`**| USB Type `C` (USB 2 only) |
 |**`0x09`**| USB Type `C` (with Switch) | 
 |**`0x0A`**| USB Type `C` (w/o Switch) | 
-|**`0xFF`**| Internal |
+|**`0xFF`**| Internal (e.g, Bluetooth and Camera) |
 
-### Rename USB Controller
+## Pre-requisites
 
-According to the Dortania's [OpenCore Install Guide](https://dortania.github.io/OpenCore-Post-Install/usb/system-preparation.html#checking-what-renames-you-need), some USB devices needs to be renamed. 
+1. Rename USB Controller
+2. Identify HUB device path in ACPI.
+	* RHUB for XHC/SHCI
+		* Such as `\_SB.PCI0.EH01.HUBN`
+	* HUBN for EHC/EH01/EH02
+		* Such as `\_SB.PCI0.XHC.RHUB`
+2. Must already have identified which ports are active, and their type.
 
-Add these patches under ACPI -> Patch of your config.plist.
 
-* **XHC1 to SHCI**: Needed for Skylake and older SMBIOS
+#### For SHCI, and EH01/EH02:
+* If you needed the rename, make sure the HUB device path in ACPI is the same as the renamed one instead of the original name - because OpenCore does renaming first before adding the custom SSDT. 
+	* For instance, if you renamed from `XHCI` to `SHCI`, then the device path will be something like <code>\\\_SB.PCI0.**SHCI**.RHUB</code>.
+
+According to the Dortania's [OpenCore Install Guide](https://dortania.github.io/OpenCore-Post-Install/usb/system-preparation.html#checking-what-renames-you-need), some USB controllers needs to be renamed.  Rename them firsy if you have the following:
 
 | Key | Type | Value |
 | :--- | :--- | :--- |
@@ -97,20 +111,15 @@ Add these patches under ACPI -> Patch of your config.plist.
 | TableLength | Number | 0 |
 | TableSignature | Data |  |
 
+## Approach
+In order to build our own USB port map via SSDT, we will do the following:
 
-## Guide
-The idea is (if macOS):
-1. We disable the `RHUB` of XHC_ Controller, or the `HUBN` of EHC_ Controller. This effectively disables the `_UPC` methods under each ports of each hubs. 
-2. Introduce a new, differently named hubs such as `XHUB` for XHC_ or `HUBX` for EHC.
-3. Take the `ADR` of the XHC_/EHC hubs, and then add them to these new hubs.
-4. Add ports under these new hubs, take the `_ADR` of each ports from RHUB/HUBN, and then adjust `_UPC` for each port.
-
-
-This guide assumes you already know which parts are active, and their port type.
-
-### For SHCI, and EH01/EH02:
-* Make sure the `Scope` and `External` is the same as the renamed one instead of the original name - because OpenCore does renaming first before adding the custom SSDT. 
-	* For instance, if you renamed from `XHCI` to `SHCI`, then the reference will be something like `_SB_.PCI0.**SHCI**.RHUB`.
+1. Disable the `RHUB` of XHC_ Controller, or the `HUBN` of EHC_ Controller. This effectively disables the `_UPC` methods under each ports of each hubs. 
+2. Introduce a new, differently named hubs such as `XHUB` for XHC_ or `HUBX` for EHC. We basically just re-introduce the hubs but with a blank slate.
+3. Add the `_ADR` of `RHUB` or `HUBN` to the new hub, basically taking address of the old hub and assign it to the new one.
+4. Declare ports under these new hubs
+5. Take the `_ADR` of each ports from `RHUB`/`HUBN`
+5. Adjust `_UPC` for each port.
  
 ```asl
 DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
@@ -137,7 +146,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
         
     Device (\_SB.PCI0.XHC.XHUB) // Add xHUB, under XHC/SHCI, or Add HUBx under EHC/EH01/EH02
     {
-            Name (_ADR, Zero)  // _ADR: Address of RHUB/HUBN in DSDT
+            Name (_ADR, Zero)
             Method (_STA, 0, NotSerialized)
             {
                 If (_OSI ("Darwin"))
@@ -187,5 +196,5 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USBMAP", 0x00001000)
 > This `.aml` is based on SSDT-RHUB, SSDT-USB-Reset, and the GUPC method. The whole idea of this guide is just disable the HUB under these USB controllers, and then introduce a new one with the `_ADR` of the original devices in DSDT/SSDT
 
 ## Notes
-* There are`_PLD` methods exist under these ports in DSDT. 
+* There are`_PLD` methods exist under these ports in DSDT, I have not a found of use of them.
 * Some information are based on the [ACPI_Mapping_USB_Ports/GUPC_Method](https://github.com/5T33Z0/OC-Little-Translated/tree/main/03_USB_Fixes/ACPI_Mapping_USB_Ports/GUPC_Method) of 5T33Z0/OC-Little-Translated guide, and the Dortania install guide.
