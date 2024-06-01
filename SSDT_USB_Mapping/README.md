@@ -57,20 +57,18 @@ The following values for USB port types are possible:
 ## Pre-requisites
 
 1. Rename USB Controller
-	* Refer to the table below.
+	* According to the Dortania's [OpenCore Install Guide](https://dortania.github.io/OpenCore-Post-Install/usb/system-preparation.html#checking-what-renames-you-need), some USB controllers needs to be renamed. Refer to the table below.
 2. Identify HUB device path in ACPI.
 	* RHUB for XHC/SHCI
 		* Such as `\_SB.PCI0.XHC.RHUB`
 	* HUBN for EHC/EH01/EH02
 		* Such as `\_SB.PCI0.EH01.HUBN`
+ * If you applied the rename, make sure the path in ACPI is the same as the renamed one instead - as OpenCore does renaming first before adding the custom SSDT. 
+	* For instance, if you renamed from `XHCI` to `SHCI`, then the device path will be something like <code>\\\_SB.PCI0.**SHCI**.RHUB</code>.
 2. Must already have identified which ports are active, and their type.
 
 
-#### For SHCI, and EH01/EH02:
-* If you needed the rename, make sure the HUB device path in ACPI is the same as the renamed one instead of the original name - because OpenCore does renaming first before adding the custom SSDT. 
-	* For instance, if you renamed from `XHCI` to `SHCI`, then the device path will be something like <code>\\\_SB.PCI0.**SHCI**.RHUB</code>.
-
-According to the Dortania's [OpenCore Install Guide](https://dortania.github.io/OpenCore-Post-Install/usb/system-preparation.html#checking-what-renames-you-need), some USB controllers needs to be renamed.  Rename them first if you have the following:
+* **XHC1 to SHCI**: Needed for Skylake and older SMBIOS
 
 | Key | Type | Value |
 | :--- | :--- | :--- |
