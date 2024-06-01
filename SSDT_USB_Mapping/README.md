@@ -118,6 +118,11 @@ IOACPIPlane:/**_SB**//**PCI0**@0/**XHC**@14000000/**RHUB**@0/**HS01**@**1**
 * Convert decimal `1` to HEX which is `01`.
   	* This is how we are going to use it later on for reference: `Name (_ADR, 0x01)`
 	* e.g, if port is `@10`, it's hex is `0A`. `Name (_ADR, 0x0A)`
+* A port can be also an internal hub.
+	* The path of a port under an (internal hub) port that will be like:
+   		* IOACPIPlane:/**_SB**//**PCI0**@0/**EH01**@1D000000/**HUBN**@0/**PR01**@**1**/**PR11**@**1**
+ 	* `\_SB.PCI0.EH01.HUBN.PR01.PR11` PR11 belongs under PR01
+  	* `PR11`s `_ADR` is `1`. `Name (_ADR, 0x01)`
 
 Now do that for each ports.
 
@@ -204,9 +209,9 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
    	 */
     
 
-    Device (\_SB.PCI0.EH01.HUBX.PR01.PR12) // It happens that some ports are also a HUB. In this case, PR01 is. So under PR01, we add a PR12
+    Device (\_SB.PCI0.EH01.HUBX.PR01.PR11) // It happens that some ports are also a HUB. In this case, PR01 is. So under PR01, we add a PR11
     {
-        Name (_ADR, One) // _ADR of PR12
+        Name (_ADR, One) // _ADR of PR11
         Method (_UPC, 0, Serialized)       
         {
             Return (Package (0x04)
