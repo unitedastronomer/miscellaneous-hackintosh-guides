@@ -25,8 +25,8 @@ Device (HS01) // The USB Port
         {
             0xFF, // Determines if a port is on or off | 0xFF = On /  Zero = Off
             0x03, // Determines the USB port type. 
-            0x00000000, // USB-C Port Capabilities (valid only for a USB-C port (values 0x08, 0x09, or 0x0A))
-            Zero //  Reserved for future use by uefi.org, this must be zero.
+            Zero, // USB-C Port Capabilities (valid only for a USB-C port (values 0x08, 0x09, or 0x0A)). Must be Zero for other port type.
+            Zero  //  Reserved for future use by uefi.org, this must be zero.
         })
     /*
         Yours might have additional `If` statements in this part.
