@@ -117,7 +117,7 @@ In order to build our own USB port map via SSDT, we will do the following:
 2. Re-introduce them with a new name such as `XHUB` as a replacement for RHUB, or `HUBX` for `HUBN`. We'll now have a nullified hub that we could customize.
 4. Add the `_ADR` of `RHUB` or `HUBN` to the new hub, basically taking address of the old hub and assign it to the new one.
 5. Declare ports under these new hubs
-6. Take the `_ADR` of each ports from DSDT.
+6. Take the `_ADR` of each ports from DSDT, and paste them into the newly enumerated ports.
 5. Adjust `_UPC` for each port.
 
 Download the [`SSDT-USBMAP.dsl`](SSDT_USB_Mapping/SSDT_USBMAP.dsl) and adjust it accordingly.
