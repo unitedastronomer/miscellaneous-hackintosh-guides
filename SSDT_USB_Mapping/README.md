@@ -201,7 +201,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
             {
                 0xFF, // PR01's active
                 0xFF, // It's Internal
-                Zero, // If you have Type C port, just refer the info here from your system DSDT/SSDT.
+                Zero, // If you have Type C port, just refer the info from your system DSDT/SSDT (for now).
                 Zero
             })
         }
@@ -233,7 +233,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
 
 ```
 
-I am not sure if macOS needs`_PLD`, just return the original value from your DSDT for now.
+**`Optional`**: if you want`_PLD`, just return the original value from your DSDT for now. 
 
 ```asl
 External (_SB_.PCI0.EH01.HUBN.PR01._PLD, MethodObj) // Referencing the _PLD method of PR01 from DSDT. 
