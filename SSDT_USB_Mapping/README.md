@@ -54,8 +54,7 @@ The following values for USB port types are possible:
 |**`0x0A`**| USB Type `C` (w/o Switch) | 
 |**`0xFF`**| Internal (e.g, Bluetooth and Camera) |
 
-## Pre-requisites
-
+## Guide
 1. You must already know which port are active, and their type as I won't be covering it here.
 2. Rename USB Controller
 	* According to the Dortania's [OpenCore Install Guide](https://dortania.github.io/OpenCore-Post-Install/usb/system-preparation.html#checking-what-renames-you-need), some USB controllers needs to be renamed. Refer to the table below.
@@ -107,16 +106,20 @@ The following values for USB port types are possible:
 
 ![](reference/hub_path.png)
 
-IOACPIPlane:/**_SB**/**PCI0**@0/**XHC**@14000000 = `\_SB.PCI0.XHC`
+IOACPIPlane:/**_SB**/**PCI0**@0/**XHC**@14000000
+* XHC's acpi-path is `\_SB.PCI0.XHC`
 
 4. Now let's find the address `_ADR`ess of each active port.
 
 ![](reference/port_adr.png)
 
-IOACPIPlane:/**_SB**//**PCI0**@0/**XHC**@14000000/**RHUB**@0/**HS01**@**1** = HS01's acpipath is `\_SB.PCI0.XHC.RHUB.HS01` and it's `_ADR`ess is at `1`. 
-	* Convert decimal `1` to HEX which is `01`. 
-		* e.g, if port is `@10`, it's hex is `0A`.
-Now find each port's adress.
+IOACPIPlane:/**_SB**//**PCI0**@0/**XHC**@14000000/**RHUB**@0/**HS01**@**1**
+* HS01's acpi-path is `\_SB.PCI0.XHC.RHUB.HS01` and it's `_ADR`ess is at `1`. 
+* Convert decimal `1` to HEX which is `01`.
+  	* This is how we are going to use it later on for reference: `Name (_ADR, 0x01)`
+	* e.g, if port is `@10`, it's hex is `0A`. `Name (_ADR, 0x0A)`
+
+Now do that for each ports.
 
 
 ## Approach
@@ -124,9 +127,9 @@ In order to build our own USB port map via SSDT, we will do the following:
 
 1. Disable the `RHUB` of XHC_ Controller, or the `HUBN` of EHC_ Controller. This effectively disables the `_UPC` methods under each ports of each hubs. 
 2. Re-introduce them with a new name such as `XHUB` as a replacement for RHUB, or `HUBX` for `HUBN`. We'll now have a nullified hub that we could customize.
-4. Add the `_ADR` of `RHUB` or `HUBN` to the new hub. Essentially, `XHUB` and `HUBX` will take over the addresses of `RHUB` and `HUBN`. 
-5. Declare ports under these new hubs, and add the `_ADR`ess of each ports we acquired from each port. 
-6. Adjust `_UPC` for each port.
+3. Add the `_ADR` of `RHUB` or `HUBN` to the new hub. Essentially, `XHUB` and `HUBX` will take over the addresses of `RHUB` and `HUBN`.
+4. Declare ports under these new hubs, and add the `_ADR`ess of each ports we acquired from each port. 
+5. Adjust `_UPC` for each port.
 
 Download the [`SSDT-USBMAP.dsl`](SSDT_USB_Mapping/SSDT_USBMAP.dsl) and adjust it accordingly.
 
@@ -140,7 +143,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
     External (_SB_.PCI0.XHC_.RHUB, DeviceObj)
 
     
-    Scope (\_SB.PCI0.EH01.HUBN)  // `Scope` - referencing to the HUB in DSDT
+    Scope (\_SB.PCI0.EH01.HUBN)  // `Scope`, referencing to the HUBN of EH01 in DSDT. It's RHUB for XHC/SHCI
     {
         Method (_STA, 0, NotSerialized)  
         {
@@ -156,22 +159,10 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
     }
     
     
-    /*
-    
-    ^ Adjust and duplicate if you have both.
-    
-        EH01:  Scope (\_SB.PCI0.EH01.HUBN)
-        EH02:  Scope (\_SB.PCI0.EH02.HUBN)
-        SHCI:  Scope (\_SB.PCI0.SHCI.RHUB)
-        XHC:   Scope (\_SB.PCI0.XHC_.RHUB)
-    
-    */ 
-    
-    
 
-    Device (\_SB.PCI0.EH01.HUBX) // We add a new Hub `Device`, since RHUB or HUBN is status is disabled.
+    Device (\_SB.PCI0.EH01.HUBX) // We add a new `HUBX` `Device`, since HUBN is status is disabled.
     {
-        Name (_ADR, Zero)  // Re-adding the _ADR (Address) of the RHUB/HUBN under the XHC/EHC USB Controller. RHUB or HUBN always have it `Zero`.
+        Name (_ADR, Zero)  // Re-adding the _ADR of the HUBN. RHUB or HUBN always have it `Zero`.
         Method (_STA, 0, NotSerialized)  
         {
             If (_OSI ("Darwin"))
@@ -185,20 +176,12 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
         }
     }
 
-    /*
+  
     
-    ^ Adjust and duplicate if you have both.
-    
-        EH01:  Device (\_SB.PCI0.EH01.HUBX)
-        EH02:  Device (\_SB.PCI0.EH02.HUBX)
-        SHCI:  Device (\_SB.PCI0.SHCI.XHUB)
-        XHC:   Device (\_SB.PCI0.XHC_.XHUB)
-    
-    */ 
 
     Device (\_SB.PCI0.EH01.HUBX.PR01) // Under HUBX, we add the Port such as PR01
     {
-        Name (_ADR, One)  // Each port has unique _ADR, please take their _ADR from the DSDT, and add them in each port under HUBX.
+        Name (_ADR, One)  // Each port has unique _ADR, here is where we add the converted HEX we looked for earlier.
         Method (_UPC, 0, Serialized)  // _UPC: USB Port Capabilities
         {
             Return (Package (0x04)
@@ -214,12 +197,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
     /*
     
     Append if there are another port:
-    Such as:
-		Device (\_SB.PCI0.EH01.HUBX.PR02) // for PR02
-    		{
-		Name (_ADR, 0x02) // _ADR of PR02 in DSDT
-		...
-		}
+
     */
     
 
