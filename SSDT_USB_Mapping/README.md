@@ -24,9 +24,9 @@ Device (HS01) // The USB Port
         Name (UPCP, Package (0x04) // The package
         {
             0xFF, // Determines if a port is on or off | 0xFF = On /  Zero = Off
-            0x03, // Determines the type of port. 
-            Zero, 
-            Zero
+            0x03, // Determines the USB port type. 
+            0x00000000, // USB-C Port Capabilities (valid only for a USB-C port (values 0x08, 0x09, or 0x0A))
+            Zero //  Reserved for future use by uefi.org, this must be zero.
         })
     /*
         Yours might have additional `If` statements in this part.
@@ -37,7 +37,7 @@ Device (HS01) // The USB Port
 ```
 
 
-More information regarding _UPC can be read [here](https://uefi.org/sites/default/files/resources/ACPI_Spec_6_5_Aug29.pdf). Page 570. 
+More information regarding `_UPC` can be read [here](https://uefi.org/sites/default/files/resources/ACPI_Spec_6_5_Aug29.pdf). Page 570. 
 
 
 The following values for USB port types are possible:
@@ -201,7 +201,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
             {
                 0xFF, // PR01's active
                 0xFF, // It's Internal
-                Zero, 
+                Zero, // If you have Type C port, just refer the info here from your system DSDT/SSDT.
                 Zero
             })
         }
@@ -231,6 +231,20 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
     }
 }
 
+```
+
+I am not sure if macOS needs`_PLD`, just return the original value from your DSDT for now.
+
+```asl
+External (_SB_.PCI0.EH01.HUBN.PR01._PLD, MethodObj) // Referencing the _PLD method of PR01 from DSDT. 
+
+Scope (\_SB.PCI0.EH01.HUBX.PR01) // The new HUBX's PR01 port
+{
+	Method (_PLD, 0, Serialized)  // Physical Location Device
+	{
+		Return (\_SB.PCI0.EH01.HUBN.PR01._PLD ()) // Return _PLD data from the HUBN's PR01 in DSDT to HUBX's _PLD
+	}
+}
 ```
 
 ## Notes
