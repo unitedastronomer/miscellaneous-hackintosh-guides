@@ -238,11 +238,11 @@ I am not sure if macOS needs`_PLD`, just return the original value from your DSD
 ```asl
 External (_SB_.PCI0.EH01.HUBN.PR01._PLD, MethodObj) // Referencing the _PLD method of PR01 from DSDT. 
 
-Scope (\_SB.PCI0.EH01.HUBX.PR01) // The new HUBX's PR01 port
+Scope (\_SB.PCI0.EH01.HUBX.PR01) // Referencing the new HUBX's PR01 port
 {
 	Method (_PLD, 0, Serialized)  // Physical Location Device
 	{
-		Return (\_SB.PCI0.EH01.HUBN.PR01._PLD ()) // Return _PLD data from the HUBN's PR01 in DSDT to HUBX's _PLD
+		Return (\_SB.PCI0.EH01.HUBN.PR01._PLD ()) // Return _PLD data from the HUBN's PR01 in DSDT to HUBX's PR01.
 	}
 }
 ```
