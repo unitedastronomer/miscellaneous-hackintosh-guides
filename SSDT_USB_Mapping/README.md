@@ -10,7 +10,7 @@ Advantage of this method:
 ### Overview
 Each port in the DSDT for Broadwell, or in a SSDT for Skylake and newer, has a method called `_UPC`. This `_UPC` method requires a specific package consisting of four items. This package indicates whether the port is **active** and specifies its **type**. 
 
-In this instance, the package is contained within `UPCP`. Your might be named differently, the structure typically resembles this format.
+In this instance, the package is contained within `UPCP`. Yours might be named differently, the structure typically resembles this format.
 
 
 ```asl
@@ -236,6 +236,13 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
 }
 
 ```
+
+
+The general idea is: if the operating system is macOS, we disable `RHUB` and `HUBN` by setting their `_STA` (status) to `0`. This also disables all methods, such as `_UPC`, for each port under these hubs. We then reintroduce these hubs with new names, like `xHUB` and `HUBx`, but keep the original `_ADR` (address) of `RHUB` and `HUBN`. Essentially, `xHUB` and `HUBx` will take over the addresses of `RHUB` and `HUBN`. 
+
+With this setup, we have a blank slate where we can enumerate the ports. We then take their original `_ADR` (address) of each port from the DSDT and assign them to our newly enumerated ports.
+
+
 
 ## Notes
 * There are`_PLD` methods exist under each ports in my DSDT, I have not a found of use of them.
