@@ -109,7 +109,7 @@ The following values for USB port types are possible:
 IOACPIPlane:/**_SB**/**PCI0**@0/**XHC**@14000000
 * XHC's acpi-path is `\_SB.PCI0.XHC`
 
-4. Now let's find the address `_ADR`ess of each active port.
+4. Now let's find the address `_ADR` of each active port.
 
 ![](reference/port_adr.png)
 
@@ -158,7 +158,10 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
         }
     }
     
-    
+	/*
+		Duplicate and adjust the above if you have both EHC (EH01/EH02) or XHC (SHCI).
+	*/
+
 
     Device (\_SB.PCI0.EH01.HUBX) // We add a new `HUBX` `Device`, since HUBN is status is disabled.
     {
@@ -176,7 +179,9 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
         }
     }
 
-  
+	/*
+		Duplicate and adjust the above if you have both EHC `HUBN` or XHC `RHUB`.
+	*/
     
 
     Device (\_SB.PCI0.EH01.HUBX.PR01) // Under HUBX, we add the Port such as PR01
@@ -194,11 +199,9 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
         }
     }
     
-    /*
-    
-    Append if there are another port:
-
-    */
+   	 /*
+   		 Append if there are another port.
+   	 */
     
 
     Device (\_SB.PCI0.EH01.HUBX.PR01.PR12) // It happens that some ports are also a HUB. In this case, PR01 is. So under PR01, we add a PR12
@@ -215,9 +218,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
             })
         }
         /*
-    
-        Append if there are another port under this HUB port.
-    
+		Append if there are another port under this HUB port.
         */
     }
 }
