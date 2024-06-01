@@ -208,7 +208,7 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
     Such as:
 		Device (\_SB.PCI0.EH01.HUBX.PR02) // for PR02
     		{
-		Name (_ADR, 0x02) // _ADR of PR02
+		Name (_ADR, 0x02) // _ADR of PR02 in DSDT
 		...
 		}
     */
