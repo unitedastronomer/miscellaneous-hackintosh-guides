@@ -65,7 +65,7 @@ The following values for USB port types are possible:
 		* Such as `\_SB.PCI0.EH01.HUBN`
  * If you applied the rename, make sure the path in ACPI is the same as the renamed one instead - as OpenCore does renaming first before adding the custom SSDT. 
 	* For instance, if you renamed from `XHCI` to `SHCI`, then the device path will be something like <code>\\\_SB.PCI0.**SHCI**.RHUB</code>.
-2. Must already have identified which ports are active, and their type.
+3. Must already have identified which ports are active, and their type.
 
 
 * **XHC1 to SHCI**: Needed for Skylake and older SMBIOS
