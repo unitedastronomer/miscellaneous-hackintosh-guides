@@ -26,7 +26,7 @@ Device (HS01) // The USB Port
             0xFF, // Determines if a port is on or off | 0xFF = On /  Zero = Off
             0x03, // Determines the USB port type. 
             Zero, // USB-C Port Capabilities (valid only for a USB-C port (values 0x08, 0x09, or 0x0A)). Must be Zero for other port type.
-            Zero  //  Reserved for future use by uefi.org, this must be zero.
+            Zero  // Reserved for future use by uefi.org, this must be zero.
         })
     /*
         Yours might have additional `If` statements in this part.
@@ -123,7 +123,7 @@ IOACPIPlane:/**_SB**//**PCI0**@0/**XHC**@14000000/**RHUB**@0/**HS01**@**1**
 	* e.g, if port is `@10`, it's hex is `0A`. `Name (_ADR, 0x0A)`
 * A port can be also an internal hub.
 	* The path of a port under an (internal hub) port that will be like:
-   		* IOACPIPlane:/**_SB**//**PCI0**@0/**EH01**@1D000000/**HUBN**@0/**PR01**@**1**/**PR11**@**1**
+   		* IOACPIPlane:/**_SB**/**PCI0**@0/**EH01**@1D000000/**HUBN**@0/**PR01**@1/**PR11**@**1**
  	* `\_SB.PCI0.EH01.HUBN.PR01.PR11` PR11 belongs under PR01
   	* `PR11`s `_ADR` is `1`. `Name (_ADR, 0x01)`
 
