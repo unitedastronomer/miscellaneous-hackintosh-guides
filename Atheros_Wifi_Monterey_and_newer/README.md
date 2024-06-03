@@ -8,7 +8,7 @@
 
 ## 
 
-### Kernel
+### 1. Kernel
 
 * [`corecaptureElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
 * [`IO80211ElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
@@ -16,9 +16,9 @@
 
  Set their **MinKernel** to `18.0.0`
 
-### Device Properties
+### 2. Device Properties
 
-Add these in device properties:
+
 | Key*   | Value      |   Type |
 |--------|------------|--------|
 | IOName |  | String |
