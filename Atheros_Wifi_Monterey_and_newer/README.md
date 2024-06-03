@@ -3,7 +3,7 @@
 > [!Note]
 > OpenCore Legacy Patcher does not officially support being run on non-Apple Hardware. The OCLP Discord does not provide any support for hacks using OCLP. 
 
-> Majority of information are based of MrLimeRunner's [sonoma-wifi-hacks](https://github.com/mrlimerunner/sonoma-wifi-hacks/blob/main/README.md) guide.
+> Some information are based of MrLimeRunner's [sonoma-wifi-hacks](https://github.com/mrlimerunner/sonoma-wifi-hacks/blob/main/README.md) guide.
 
 Note that macOS only has a limited support for Atheros cards.
 
@@ -12,8 +12,6 @@ Currently confirmed working cards:
 * AR9287
 * AR9485
 
-## 
-
 ### 1. Kernel
 
 * [`corecaptureElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
@@ -21,6 +19,10 @@ Currently confirmed working cards:
   * Only keep **AirportAtheros40.kext** from its Plugins folder.
 
  Set their **MinKernel** to `18.0.0`
+
+ #### For AR9565, import the set of patches ar9565.plist from this repo under Kernel -> Patches of your config.plist
+* Patches are based on ATH9Fixup source code. These patches will work with the injected **AirportAtheros40**. Wifi won't work without this.
+
 
 ### 2. Device Properties
 
@@ -36,7 +38,7 @@ Currently confirmed working cards:
   
 > _"...the kext has internal PCIID checks meaning simply expanding the device-id list won't work."_ - [Khronokernel](https://github.com/khronokernel/IO80211-Patches?tab=readme-ov-file#unsupported-atheros-chipsets)
 
-Atheros Cards listed inside **AirportAtheros40**'s **Info.plist**:
+Atheros cards listed inside **AirportAtheros40**'s **Info.plist**:
 ||`IOName` and `compatible`|`device-id`|Note|
 |-|-|-|-|
 |AR93xx Wireless Network Adapter| pci168c,30 | 30000000 | Used in iMac12,x |
@@ -69,40 +71,31 @@ Changing the secure boot status requires an NVRAM reset, or variables retained c
 |--------|------------|--------|
 | boot-args | amfi=0x80 | String |
 
-#
-
-#### For AR9565, import the set of patches ar9565.plist from this repo under Kernel -> Patches of your config.plist
-* Patches are based on ATH9Fixup source code. These patches will work with the injected **AirportAtheros40**. WiFi won't work without this.
 
 Once the changes have been applied, reboot, reset your NVRAM, and OpenCore Legacy Patcher should now show the option to apply root patches.
 
 # Supplemental Guide: Assigning an ACPI Name
 
-If OCLP still doesn't show "**Legacy Wireless**", your WiFi card may be hidden under a PCI bridge or not enumerated in ACPI at all. To solve this, assign a name to the card in ACPI using an SSDT.
-
-
 ### Issue Overview
-If you have already followed the guide above, but OCLP does not show a "**Legacy Wireless**". Your WiFi card is probably hidden under a PCI bridge, and/or not enumerated in ACPI at all. OpenCore's Device Properties can only overwrite properties for named devices in ACPI.
-
-To solve this, you need to assign a name to the card in ACPI using an SSDT. This allows you to successfully inject the necessary device properties so that OpenCore Legacy Patcher (OCLP) can recognize the WiFi card.
+If you have already followed the guide above, but OCLP does not show a "**Legacy Wireless**". Your WiFi card is probably hidden under a PCI bridge, or not enumerated in ACPI at all. OpenCore can only overwrite properties for named devices in ACPI.
 
 #### Example:
-It ends with `pci168c,36`, which is **unnamed**, so the `IOName` we try to inject is **not** applied.
+In this case, it ends with `pci168c,36`, which shows us it's **unnamed**, the `IOName` we try to inject is **not** applied.
 ![](screenshots/hackintool_pcie_tab.png)
 
-If it has a name, such as `ARPT`. In this case, the `IOName` we try to inject is applied.
+If it has a name such as `ARPT`, The `IOName` we try to inject is applied.
 ![](screenshots/hackintool_pci1683,36_to_ARPT.png)
 
-### Steps to Assign an ACPI Name
+### Assign an ACPI Name
 
 1. Download, and run Hackintool
-2. Identify PCI Path
+2. Identify PCI Path, and Debug value
 * Navigate to the PCIe tab. Identify your WiFi card and note its ACPI path and debug values. For instance:
 
 ![](screenshots/hackintool_pcie_tab.png)
 
 **`PCI0`**<sup> @0 /</sup> **`RP04`**<sup> @1C,3 /</sup> pci168c,36<sup> @0</sup>
-* Path: PCI0.RP04 (actually the ACPI path for it's parent/PCI Bridge)
+* Path: PCI0.RP04 - actually the ACPI path for it's parent/PCI Bridge
 * Debug: 02 00 0
 
 
@@ -133,7 +126,7 @@ After:
 ![](screenshots/hackintool_pci1683,36_to_ARPT.png)
 
 
-You can now see the `IOName` is properly injected/spoofed. Force root patching would not be necessary anymore as OCLP will now recognize the spoofed `IOName` (of an iMac11,x Atheros card - of which OCLP supports).
+You can now see the `IOName` is properly injected/spoofed. OCLP will now recognize the spoofed `IOName` of an iMac11,x Atheros card - of which OCLP supports.
 
 |Before|After|
 |-|-|
@@ -144,7 +137,6 @@ Open the OCLP app, then apply root patches.
 # Other Important Notes: 
 - Once your root volume has been patched, SIP must remain at least partially disabled, or you will not be able to properly boot your system.
 - Delta updates are unavailable to root-patched systems. Updates will show as the full 12GB+ installers. If necessary, you can revert your patches and update, then re-apply them, but do so at your own risk.
-- AMFI is be partially re-enabled by AMFIPass. This can be handy if you're running into issues with an application you use related to AMFI.
 - If you run into issues with Electron based apps after disabling SIP, ie: *Discord*, *Google Chrome*, *VS Code*, you can try adding the following boot-arg `ipc_control_port_options=0`.
 * AMFI can be partially re-enabled using [AMFIPass.kext](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Acidanthera) from OCLP. This can be handy if you're running into issues with an application you use related to AMFI.
 * Alternatively, you could use chunnann's patched <a href="https://www.insanelymac.com/forum/topic/312045-atheros-wireless-driver-os-x-101112-for-unsupported-cards/?do=findComment&comment=2509900">AirPortAtheros40.kext </a> 10.11.x (El Capitan). If using it, make sure to:
