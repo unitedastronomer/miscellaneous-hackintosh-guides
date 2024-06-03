@@ -49,7 +49,7 @@ This will allow OCLP to automatically allow and detect **"Legacy Wireless"**
 ### Misc 
 
 - Set Secure Boot Model to `Disabled`.
-Changing the secure boot status requires an NVRAM reset, or variables retained can cause issues with IMG4 verification in macOS. - [Khronokernel](https://github.com/mrlimerunner/sonoma-wifi-hacks?tab=readme-ov-file#pre-root-patching)
+Changing the secure boot status requires an NVRAM reset, or variables retained can cause issues with IMG4 verification in macOS. - as per [Khronokernel](https://github.com/mrlimerunner/sonoma-wifi-hacks?tab=readme-ov-file#pre-root-patching)
 	- [ApECID](https://dortania.github.io/OpenCore-Post-Install/universal/security/applesecureboot.html#apecid) *cannot* be used with root patches, it needs to be disabled and remain disabled.
  
 ### NVRAM
