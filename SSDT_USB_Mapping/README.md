@@ -1,7 +1,7 @@
 
 # Mapping USB ports via ACPI without Replacement table
 > [!NOTE]  
->  Disclaimer: I am not a developer, and my knowledge of ACPI is limited. This might, or **MIGHT NOT** conform to ACPI specification. 
+>  Disclaimer: I am not a developer, and my knowledge of ACPI is limited. This might, or **MIGHT NOT** conform to ACPI specification. Do not consider this a guide. There are much easier, and recommended utilities in mapping USB - such as USBMap by CorpNewt, or USBToolBox by DhinakG.
 
 Advantage of this method:
 * macOS independent!
@@ -57,7 +57,7 @@ The following values for USB port types are possible:
 |**`0x0A`**| USB Type `C` (w/o Switch) | 
 |**`0xFF`**| Internal (e.g, Bluetooth and Camera) |
 
-## Guide
+## -
 1. You must already know which port are active, and their type as I won't be covering it here.
 2. Rename USB Controller
 	* According to the Dortania's [OpenCore Install Guide](https://dortania.github.io/OpenCore-Post-Install/usb/system-preparation.html#checking-what-renames-you-need), some USB controllers needs to be renamed. Refer to the table below.
