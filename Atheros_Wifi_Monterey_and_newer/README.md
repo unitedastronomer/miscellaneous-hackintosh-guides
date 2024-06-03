@@ -48,8 +48,6 @@ Example:
 * AR9287 with an IOName `pci168c,2e`, must set its `IOName` and `compatible` to `pci168c,2a`, and its `device-id` to `2A000000`.
 * AR9485 with an IOName `pci168c,32`, must set its `IOName` and `compatible` to `pci168c,30`, and its `device-id` to `30000000`.
 
-This will allow OCLP to automatically allow and detect **"Legacy Wireless"**
-
 ### Misc 
 
 - Set Secure Boot Model to `Disabled`.
