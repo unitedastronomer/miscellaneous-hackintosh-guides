@@ -9,8 +9,8 @@ Grab [**CatalinaBCM5701Ethernet.kext**](https://github.com/dortania/OpenCore-Leg
 | device-id | B4160000 | Data |
 | compatible | pci14e4,16b4 | String |
 
-3. Add kext to your OC/Kexts folder, and make sure it is reflected in your config.plist.
-4. Set MinKernel to **20.0.0**. <br>
+2. Add kext to your OC/Kexts folder, and make sure it is reflected in your config.plist.
+3. Set MinKernel to **20.0.0**. <br>
 
 <br>
 
