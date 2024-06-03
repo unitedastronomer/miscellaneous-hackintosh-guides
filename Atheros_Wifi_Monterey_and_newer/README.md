@@ -68,7 +68,7 @@ Changing the secure boot status requires an NVRAM reset, or variables retained c
 #
 
 #### For AR9565, import the set of patches ar9565.plist from this repo under Kernel -> Patches of your config.plist
-* Patches are based on ATH9Fixup source code. These patches will work with the injected **AirportAtheros40**.
+* Patches are based on ATH9Fixup source code. These patches will work with the injected **AirportAtheros40**. WiFi won't work without this.
 
 Once the changes have been applied, reboot, reset your NVRAM, and OpenCore Legacy Patcher should now show the option to apply root patches.
 
