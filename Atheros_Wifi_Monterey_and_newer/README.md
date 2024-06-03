@@ -50,13 +50,13 @@ Example:
 * AR9287 with an IOName `pci168c,2e`, must set its `IOName` and `compatible` to `pci168c,2a`, and its `device-id` to `2A000000`.
 * AR9485 with an IOName `pci168c,32`, must set its `IOName` and `compatible` to `pci168c,30`, and its `device-id` to `30000000`.
 
-### Misc 
+### 3. Misc 
 
 - Set Secure Boot Model to `Disabled`.
 Changing the secure boot status requires an NVRAM reset, or variables retained can cause issues with IMG4 verification in macOS. - as per [Khronokernel](https://github.com/mrlimerunner/sonoma-wifi-hacks?tab=readme-ov-file#pre-root-patching)
 	- [ApECID](https://dortania.github.io/OpenCore-Post-Install/universal/security/applesecureboot.html#apecid) *cannot* be used with root patches, it needs to be disabled and remain disabled.
  
-### NVRAM
+### 4. NVRAM
 - Set SIP (System Integrity Protection) to a reduced state.
 
 | Key*   | Value      |   Type |
