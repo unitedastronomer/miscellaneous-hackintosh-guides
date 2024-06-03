@@ -12,7 +12,7 @@
 
 * [`corecaptureElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
 * [`IO80211ElCap.kext`](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Wifi)
-  * This has child kexts inside its Plugins folder, only keep **AirportAtheros40.kext**
+  * Only keep **AirportAtheros40.kext** from its Plugins folder.
 
  Set their **MinKernel** to `18.0.0`
 
@@ -25,10 +25,12 @@
 | compatible|  | String |
 | device-id |  | Data |
 
-* The **IOName** is used to allow OCLP to detect a "**Legacy Wireless**"
-* **device-id** and **compatible**, spoof to one of the card listed inside **AirportAtheros40**'s **Info.plist**. _"...the kext has internal PCIID checks meaning simply expanding the device-id list won't work."_ - [Khronokernel](https://github.com/khronokernel/IO80211-Patches?tab=readme-ov-file#unsupported-atheros-chipsets)
+* The **IOName** allows OCLP to detect a "**Legacy Wireless**"
+* **device-id** and **compatible** should be spoofed to one of the cards listed inside AirportAtheros40's Info.plist.
+  
+> _"...the kext has internal PCIID checks meaning simply expanding the device-id list won't work."_ - [Khronokernel](https://github.com/khronokernel/IO80211-Patches?tab=readme-ov-file#unsupported-atheros-chipsets)
 
-These are the devices listed inside **`AirportAtheros40`**'s **Info.plist**. 
+Atheros Cards listed inside **AirportAtheros40**'s **Info.plist**:
 ||`IOName` and `compatible`|`device-id`|Note|
 |-|-|-|-|
 |AR93xx Wireless Network Adapter| pci168c,30 | 30000000 | Used in iMac12,x |
@@ -44,19 +46,20 @@ Example:
 
 This will allow OCLP to automatically allow and detect **"Legacy Wireless"**
 
-### Misc Section
+### Misc 
 
-- Secure Boot Model set to `Disabled`. Changing the secure boot status **requires** an NVRAM reset, if not some variables are retained which can cause issue with IMG4 verification in macOS. - [Khronokernel](https://github.com/mrlimerunner/sonoma-wifi-hacks?tab=readme-ov-file#pre-root-patching)
+- Set Secure Boot Model to `Disabled`.
+Changing the secure boot status requires an NVRAM reset, or variables retained can cause issues with IMG4 verification in macOS. - [Khronokernel](https://github.com/mrlimerunner/sonoma-wifi-hacks?tab=readme-ov-file#pre-root-patching)
 	- [ApECID](https://dortania.github.io/OpenCore-Post-Install/universal/security/applesecureboot.html#apecid) *cannot* be used with root patches, it needs to be disabled and remain disabled.
  
-### NVRAM Section
-- SIP (System Integrity Protection) must be set to a reduced state.
+### NVRAM
+- Set SIP (System Integrity Protection) to a reduced state.
 
 | Key*   | Value      |   Type |
 |--------|------------|--------|
 | csr-active-config | 03080000 | Data | 
 
- - AMFI set to disabled. Add the following to your boot arguments.
+ - Disable AMFI by adding the following to your boot arguments.
 
 | Key*   | Value      |   Type |
 |--------|------------|--------|
@@ -64,15 +67,14 @@ This will allow OCLP to automatically allow and detect **"Legacy Wireless"**
 
 #
 
-- Once the changes have been applied, reboot, reset your NVRAM and then OpenCore Legacy Patcher should now show the option to apply root patches.
+#### For AR9565, import the set of patches ar9565.plist from this repo under Kernel -> Patches of your config.plist
+* Patches are based on ATH9Fixup source code. These patches will work with the injected **AirportAtheros40**.
 
-#### For AR9565, import the set of patches `ar9565.plist` from this repo under `Kernel -> Patches` of your config.plist
-* Patches are based on ATH9Fixup source code. Even `Kernel` -> `Patch` is meant to be used for kexts that resides in S/L/E, these set of patches will just works with the injected `AirportAtheros40`.
-
+Once the changes have been applied, reboot, reset your NVRAM, and OpenCore Legacy Patcher should now show the option to apply root patches.
 
 # Supplemental Guide: Assigning an ACPI Name
 
-This section addresses a specific scenario where the guide may not work as expected. It applies if, after following the steps above, OpenCore Legacy Patcher (OCLP) still doesn't show **"Legacy Wireless"** for your Atheros WiFi card.
+If OCLP still doesn't show "**Legacy Wireless**", your WiFi card may be hidden under a PCI bridge or not enumerated in ACPI at all. To solve this, assign a name to the card in ACPI using an SSDT.
 
 
 ### Issue Overview
@@ -136,12 +138,12 @@ You can now see the `IOName` is properly injected/spoofed. Force root patching w
 Open the OCLP app, then apply root patches.
 
 # Other Important Notes: 
-- Once your root volume has been patched, SIP must remain at least partially disabled (the settings applied to your config.plist), or ***you will not be able to properly boot your system***.
-- Delta updates are unavailable to root patched sytems, so updates will show as the full 12GB+ installers. Though not recommended, it is possible to revert your patches and update, then re-apply them if you absolutely cannot download the full update, but do so at your own risk.
+- Once your root volume has been patched, SIP must remain at least partially disabled, or you will not be able to properly boot your system.
+- Delta updates are unavailable to root-patched systems. Updates will show as the full 12GB+ installers. If necessary, you can revert your patches and update, then re-apply them, but do so at your own risk.
 - AMFI is be partially re-enabled by AMFIPass. This can be handy if you're running into issues with an application you use related to AMFI.
 - If you run into issues with Electron based apps after disabling SIP, ie: *Discord*, *Google Chrome*, *VS Code*, you can try adding the following boot-arg `ipc_control_port_options=0`.
 * AMFI can be partially re-enabled using [AMFIPass.kext](https://github.com/dortania/OpenCore-Legacy-Patcher/tree/main/payloads/Kexts/Acidanthera) from OCLP. This can be handy if you're running into issues with an application you use related to AMFI.
-* Alternatively, you could use chunnann's patched <a href="https://www.insanelymac.com/forum/topic/312045-atheros-wireless-driver-os-x-101112-for-unsupported-cards/?do=findComment&comment=2509900">AirPortAtheros40.kext </a> 10.11.x (El Capitan). If using it Make sure to:
+* Alternatively, you could use chunnann's patched <a href="https://www.insanelymac.com/forum/topic/312045-atheros-wireless-driver-os-x-101112-for-unsupported-cards/?do=findComment&comment=2509900">AirPortAtheros40.kext </a> 10.11.x (El Capitan). If using it, make sure to:
   * Delete <code>CodeSignature</code> and <code>Version.plist</code>
   * Open <code>Info.plist</code>, find <code>com.apple.iokit.IO80211Family</code>, and replace it with <code>com.apple.iokit.IO80211ElCap</code>
 
