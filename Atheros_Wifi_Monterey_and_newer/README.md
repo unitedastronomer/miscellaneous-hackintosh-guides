@@ -5,6 +5,8 @@
 
 > Majority of information are based of MrLimeRunner's [sonoma-wifi-hacks](https://github.com/mrlimerunner/sonoma-wifi-hacks/blob/main/README.md) guide.
 
+Note that macOS only has a limited support for Atheros cards.
+
 Currently confirmed working cards:
 * AR9565 (with additional patches)
 * AR9287
