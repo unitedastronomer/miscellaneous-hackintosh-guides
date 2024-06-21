@@ -226,11 +226,11 @@ DefinitionBlock ("", "SSDT", 2, "USBMAP", "USB_MAP", 0x00001000)
                 Zero
             })
         }
+
+    }
         /*
 		Append if there are another port under this HUB port.
-        */
-    }
-}
+        */}
 
 ```
 
